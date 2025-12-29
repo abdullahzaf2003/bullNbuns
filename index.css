@@ -1,0 +1,144 @@
+:root {
+    /* Color Palette - Appetizing Fast Food Theme */
+    --primary: #FF9F1C;
+    /* Vibrant Orange (Cheese/Bun) */
+    --primary-hover: #e08605;
+    --secondary: #00B4D8;
+    /* Fresh Blue (Contrast) */
+    --accent: #D90429;
+    /* Ketchup Red (Action) */
+
+    /* Text Colors */
+    --text-main: #2b0c03;
+    /* Dark Brownish-Black (Grilled Burger tone) - softer than pure black */
+    --text-muted: #6b4c3e;
+    /* Warm Grey/Brown */
+
+    /* Backgrounds */
+    --bg-body: #f8f5f2;
+    /* Warm Off-White/Cream (Better than cool grey) */
+    --bg-card: #ffffff;
+    --bg-dark: #120a06;
+    /* Rich Dark Coffee/Black */
+
+    --light: #fff;
+    --grey: #ccc;
+    --surface: #ffffff;
+
+    /* Fonts */
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+
+    /* Spacing */
+    --container-padding: 2rem;
+    --gap: 1.5rem;
+
+    /* Transitions */
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-body);
+    /* Using light grey background */
+    color: var(--text-main);
+    /* Using dark text */
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition);
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+/* Utilities */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--container-padding);
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    background-color: var(--primary);
+    color: var(--dark);
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 159, 28, 0.4);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 2px solid var(--light);
+    color: var(--light);
+}
+
+.btn-secondary:hover {
+    background-color: var(--light);
+    color: var(--dark);
+}
+
+.section-title {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.8s ease forwards;
+}

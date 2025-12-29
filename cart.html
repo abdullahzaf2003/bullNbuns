@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart | Bull N Buns</title>
+    <meta name="description" content="Review your order at Bull N Buns.">
+    <link rel="icon" href="./assets/logo/name.png" type="image/png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;700;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="./assets/logo/name.png" alt="Bull N Buns Logo">
+                </a>
+            </div>
+
+            <div class="header-nav">
+                <a href="index.html#home" class="header-btn">Home</a>
+                <a href="index.html#menu" class="header-btn">Menu</a>
+                <a href="ongoing_orders.html" class="header-btn">Orders</a>
+                <a href="index.html#contact" class="header-btn">Contact</a>
+            </div>
+
+            <div class="nav-right">
+                <div class="nav-icons">
+                    <a href="cart.html" class="icon-btn cart-icon-btn">
+                        <img src="./assets/cart.png" alt="Cart" style="width: 30px; height: auto;">
+                        <span id="cart-count" class="cart-badge">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Cart Section -->
+    <section class="cart-section">
+        <div class="container">
+            <h2 class="section-title">Your Cart</h2>
+
+            <div class="cart-grid">
+                <!-- Left: Items -->
+                <div class="cart-items" id="cart-items-container">
+                    <div class="cart-empty-msg">
+                        <h3>Loading your cart...</h3>
+                    </div>
+                </div>
+
+                <!-- Right: Summary -->
+                <div class="cart-summary">
+                    <h3>Order Summary</h3>
+                    <br>
+                    <div class="summary-row">
+                        <span>Items</span>
+                        <span>-</span>
+                    </div>
+                    <div class="summary-total">
+                        <span>Total</span>
+                        <span id="cart-total">Rs. 0</span>
+                    </div>
+                    <button class="btn checkout-btn" onclick="window.location.href='checkout.html'">Checkout</button>
+                    <br><br>
+                    <a href="index.html#menu"
+                        style="display:block; text-align:center; color:var(--text-muted); font-size:0.9rem;">Constraint
+                        Shopping</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>Bull N Buns</h2>
+                    <p>Feeding the wild side of you since 2024.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#menu">Menu</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h3>Follow Us</h3>
+                    <div class="social-icons">
+                        <!-- Social placeholders -->
+                        <span>IG</span> <span>FB</span> <span>TW</span>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Bull N Buns. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

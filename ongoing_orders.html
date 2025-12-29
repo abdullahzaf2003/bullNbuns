@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders | Bull N Buns</title>
+    <link rel="icon" href="./assets/logo/name.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .order-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .order-card h3 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .order-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background-color: #FF9F1C;
+        }
+
+        .status-accepted {
+            background-color: #2EC4B6;
+        }
+
+        .status-rejected {
+            background-color: #EF476F;
+        }
+
+        .status-delivered {
+            background-color: #06D6A0;
+        }
+
+        .order-info {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+
+        .order-info p {
+            margin: 5px 0;
+        }
+
+        .order-items {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .order-items ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .order-items li {
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+
+        .refresh-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="./assets/logo/name.png" alt="Bull N Buns Logo">
+                </a>
+            </div>
+            <div class="header-nav">
+                <a href="ongoing_orders.html" class="header-btn"
+                    style="background-color: var(--primary); color: white;">My Orders</a>
+                <a href="index.html#home" class="header-btn">Home</a>
+                <a href="index.html#menu" class="header-btn">Menu</a>
+                <a href="index.html#contact" class="header-btn">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="section" style="padding-top: 100px;">
+        <div class="container">
+            <h1 class="section-title">My Order History</h1>
+            <button class="refresh-btn" onclick="fetchOrders()">Refresh Feed</button>
+
+            <div id="loading" style="text-align:center;">Loading orders...</div>
+            <div id="orders-container" class="orders-grid"></div>
+        </div>
+    </section>
+
+    <script>
+        const container = document.getElementById('orders-container');
+        const loading = document.getElementById('loading');
+
+        async function fetchOrders() {
+            loading.style.display = 'block';
+            container.innerHTML = '';
+
+            // Get IDs from history
+            let orderIds = JSON.parse(localStorage.getItem('my_orders') || '[]');
+
+            /* 
+               Backward Compatibility:
+               Check current_order_id in case it was set before array logic was added.
+            */
+            const currentId = localStorage.getItem('current_order_id');
+            if (currentId && !orderIds.includes(currentId)) {
+                orderIds.push(currentId);
+                localStorage.setItem('my_orders', JSON.stringify(orderIds));
+            }
+
+            if (orderIds.length === 0) {
+                loading.style.display = 'none';
+                container.innerHTML = `
+                    <div style="text-align:center; padding:20px; color: var(--text-color);">
+                        <h3>No orders found</h3>
+                        <p>You haven't placed any orders yet.</p>
+                        <br>
+                        <a href="index.html#menu" class="btn">Start Ordering</a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Reverse to show newest first
+            const uniqueIds = [...new Set(orderIds)].reverse();
+
+            try {
+                // Fetch all orders in parallel
+                const orderPromises = uniqueIds.map(id =>
+                    fetch(`/api/orders/${id}`)
+                        .then(res => res.json())
+                        .catch(err => ({ success: false }))
+                );
+
+                const results = await Promise.all(orderPromises);
+                const orders = results
+                    .filter(res => res.success && res.order)
+                    .map(res => res.order);
+
+                loading.style.display = 'none';
+
+                if (orders.length === 0) {
+                    container.innerHTML = '<p style="text-align:center;">No valid orders found.</p>';
+                    return;
+                }
+
+                orders.forEach(order => {
+                    const card = document.createElement('div');
+                    card.className = 'order-card';
+
+                    const itemsList = order.items.map(item => {
+                        const addonText = (item.addons && item.addons.length > 0) ? ` (+${item.addons.length} addons)` : '';
+                        return `<li>${item.name}${addonText} x1</li>`;
+                    }).join('');
+
+                    let statusClass = 'status-pending';
+                    if (order.status === 'accepted') statusClass = 'status-accepted';
+                    if (order.status === 'rejected') statusClass = 'status-rejected';
+                    if (order.status === 'delivered') statusClass = 'status-delivered';
+
+                    const dateStr = new Date(order.createdAt).toLocaleString();
+
+                    card.innerHTML = `
+                        <span class="order-status ${statusClass}">${order.status}</span>
+                        <h3>Order #${order._id.slice(-6).toUpperCase()}</h3>
+                        <div class="order-info">
+                            <p><strong>Date:</strong> ${dateStr}</p>
+                            <p><strong>Status:</strong> ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</p>
+                            <p><strong>Total:</strong> Rs. ${order.totalPrice}</p>
+                            ${order.notes ? `<p><strong>Note:</strong> ${order.notes}</p>` : ''}
+                        </div>
+                        <div class="order-items">
+                            <strong>Items:</strong>
+                            <ul>${itemsList}</ul>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error(error);
+                loading.textContent = 'Error loading history.';
+            }
+        }
+
+        // Refresh periodically
+        fetchOrders();
+        setInterval(fetchOrders, 15000);
+    </script>
+</body>
+
+</html>

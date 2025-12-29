@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bull N Buns | Legendary Burgers</title>
+    <meta name="description"
+        content="Bull N Buns - The best burgers, crispy fries, and refreshing drinks in town. Come meet our crew!">
+    <link rel="icon" href="./assets/logo/name.png" type="image/png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;700;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Additional component styles -->
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <img src="./assets/logo/name.png" alt="Bull N Buns Logo">
+            </div>
+
+            <div class="header-nav">
+                <a href="ongoing_orders.html" class="header-btn"
+                    style="background-color: var(--primary); color: white;">Live Orders</a>
+                <a href="#home" class="header-btn">Home</a>
+                <a href="#menu" class="header-btn">Menu</a>
+                <a href="#contact" class="header-btn">Contact</a>
+            </div>
+
+            <div class="nav-right">
+                <div class="nav-icons">
+                    <a href="cart.html" class="icon-btn cart-icon-btn">
+                        <img src="./assets/cart.png" alt="Cart" style="width: 30px; height: auto;">
+                        <span id="cart-count" class="cart-badge">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <!-- Hero Section (Comic Layout) -->
+    <header class="hero" id="home">
+        <div class="comic-grid">
+            <!-- Panel 1: The City (Context) -->
+            <div class="comic-panel panel-main">
+                <img src="./assets/background/bg.png" alt="City Background">
+            </div>
+
+            <!-- Panel 2: The Boss (Bull) -->
+            <div class="comic-panel panel-character-1">
+                <img src="./assets/comic/card 2.png" alt="Comic Card 2">
+            </div>
+
+            <!-- Panel 3: The Muscle (Gorilla) -->
+            <div class="comic-panel panel-character-2">
+                <img src="./assets/comic/card 3.png" alt="Comic Card 3">
+            </div>
+
+            <!-- Panel 4: The Crowd (Cow) -->
+            <div class="comic-panel panel-character-3">
+                <img src="./assets/comic/card 4.png" alt="Comic Card 4">
+            </div>
+
+            <!-- Panel 5: The King (Lion) -->
+            <div class="comic-panel panel-character-4">
+                <img src="./assets/comic/card 5.png" alt="Comic Card 5">
+            </div>
+
+            <!-- Panel 6: The Wool (Sheep) -->
+            <div class="comic-panel panel-character-5">
+                <img src="./assets/comic/card 6.png" alt="Comic Card 6">
+            </div>
+
+            <!-- Panel 7: Comic Text -->
+            <div class="comic-panel panel-text-1">
+                <img src="./assets/comic/card 7.png" alt="Comic Card 7">
+            </div>
+
+            <!-- Panel 8: Logo Feature -->
+            <div class="comic-panel panel-logo-feature">
+                <img src="./assets/comic/card 9.png" alt="Comic Card 9">
+            </div>
+        </div>
+    </header>
+
+    <!-- Intro Text Section -->
+    <section class="intro-section">
+        <div class="container intro-flex">
+            <!-- Left Side Burger -->
+            <div class="intro-side-img left-img">
+                <img src="./assets/burgers/1.png" alt="Delicious Burger Left">
+            </div>
+
+            <div class="intro-content">
+                <h1 class="fade-in">Unleash the <span class="text-primary">Beast</span><br>of Flavor</h1>
+                <p class="fade-in" style="animation-delay: 0.2s;">Juicy Burgers, Crispy Fries, and Ice-Cold Drinks.</p>
+                <div class="hero-btns fade-in" style="animation-delay: 0.4s;">
+                    <a href="#menu" class="btn">View Menu</a>
+                </div>
+            </div>
+
+            <!-- Right Side Burger -->
+            <div class="intro-side-img right-img">
+                <img src="./assets/burgers/2.png" alt="Delicious Burger Right">
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Menu Section -->
+    <section class="menu-section" id="menu">
+        <div class="container">
+            <h2 class="section-title">Our Menu</h2>
+            <div class="menu-tabs">
+                <button class="tab-btn active" data-category="beef">Beef</button>
+                <button class="tab-btn" data-category="chicken">Chicken</button>
+                <button class="tab-btn" data-category="fries">Fries</button>
+                <button class="tab-btn" data-category="loaded-fries">Loaded Fries</button>
+                <button class="tab-btn" data-category="drinks">Drinks</button>
+            </div>
+
+            <div class="menu-grid" id="menu-grid">
+                <!-- Items injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>Bull N Buns</h2>
+                    <p>Feeding the wild side of you since 2024.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#menu">Menu</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h3>Follow Us</h3>
+                    <div class="social-icons">
+                        <!-- Social placeholders -->
+                        <span>IG</span> <span>FB</span> <span>TW</span>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Bull N Buns. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Add-on Modal -->
+    <div id="addon-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-item-name">Item Name</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="addons-section" id="size-section" style="display:none;">
+                    <h3>Size</h3>
+                    <div id="size-list" class="addons-grid">
+                        <!-- Size options injected via JS -->
+                    </div>
+                </div>
+
+                <div class="addons-section">
+                    <h3>Dips</h3>
+                    <div id="dips-list" class="addons-grid">
+                        <!-- Dips injected via JS -->
+                    </div>
+                </div>
+
+                <div class="addons-section">
+                    <h3>Add-Ons</h3>
+                    <div id="addons-list" class="addons-grid">
+                        <!-- Add-ons injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="total-price">Total: <span id="modal-total-price">Rs. 0</span></div>
+                <button id="confirm-add-btn" class="btn">Add to Order</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

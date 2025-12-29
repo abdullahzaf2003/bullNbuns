@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Bull N Buns</title>
+    <meta name="description" content="Complete your order at Bull N Buns.">
+    <link rel="icon" href="./assets/logo/name.png" type="image/png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;700;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="./assets/logo/name.png" alt="Bull N Buns Logo">
+                </a>
+            </div>
+
+            <div class="header-nav">
+                <a href="index.html#home" class="header-btn">Home</a>
+                <a href="index.html#menu" class="header-btn">Menu</a>
+                <a href="ongoing_orders.html" class="header-btn">Orders</a>
+                <a href="index.html#contact" class="header-btn">Contact</a>
+            </div>
+
+            <div class="nav-right">
+                <div class="nav-icons">
+                    <a href="cart.html" class="icon-btn cart-icon-btn">
+                        <img src="./assets/cart.png" alt="Cart" style="width: 30px; height: auto;">
+                        <span id="cart-count" class="cart-badge">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Checkout Section -->
+    <section class="cart-section">
+        <div class="container">
+            <h2 class="section-title">Checkout Details</h2>
+
+            <div class="cart-grid">
+                <!-- Left: Form -->
+                <div class="form-container">
+                    <form class="checkout-form" id="checkout-form">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" placeholder="John Doe" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" placeholder="+92 300 1234567" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Delivery Details</label>
+
+                            <!-- Area Selection -->
+                            <div style="margin-bottom: 15px;">
+                                <label for="area" style="font-size: 0.9em; color: var(--text-color);">Select
+                                    Area</label>
+                                <select id="area" name="area" required
+                                    style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: var(--input-bg); color: var(--text-color);">
+                                    <option value="" disabled selected>Select your area...</option>
+                                    <option value="Model Town">Model Town</option>
+                                    <option value="Askari V">Askari V</option>
+                                    <option value="Township">Township</option>
+                                    <option value="Garden Town">Garden Town</option>
+                                    <option value="Bahar Colony">Bahar Colony</option>
+                                    <option value="Modren Colony">Modren Colony</option>
+                                    <option value="Faisal Town">Faisal Town</option>
+                                </select>
+                                <p style="font-size: 0.8rem; color: red; margin-top: 5px;">
+                                    Note: Orders from areas other than these will be rejected.
+                                </p>
+                            </div>
+
+                            <!-- Specific Address -->
+                            <label for="address" style="font-size: 0.9em; color: var(--text-color);">Full Address (House
+                                #, Street #, Block)</label>
+                            <textarea id="address" name="address" rows="3" placeholder="Street 1, House 2, Block A..."
+                                required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes">Order Notes (Optional)</label>
+                            <textarea id="notes" name="notes" rows="2" placeholder="Extra spicy? No onions?"></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Right: Summary (Simplified) -->
+                <div class="cart-summary">
+                    <h3>Your Total</h3>
+                    <br>
+                    <div class="summary-total">
+                        <span>Total</span>
+                        <span id="checkout-total">Rs. 0</span>
+                    </div>
+                    <button type="submit" form="checkout-form" class="btn checkout-btn">Place Order</button>
+                    <br><br>
+                    <a href="cart.html"
+                        style="display:block; text-align:center; color:var(--text-muted); font-size:0.9rem;">Back to
+                        Cart</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>Bull N Buns</h2>
+                    <p>Feeding the wild side of you since 2024.</p>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Bull N Buns. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Inline script for checkout specific logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const cart = localStorage.getItem('bull_n_buns_cart')
+                ? JSON.parse(localStorage.getItem('bull_n_buns_cart'))
+                : [];
+
+            if (cart.length === 0) {
+                // Redirect if empty
+                window.location.href = 'index.html#menu';
+            }
+
+            const total = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+            const totalEl = document.getElementById('checkout-total');
+            if (totalEl) totalEl.textContent = `Rs. ${total}`;
+
+            // Handle Submit
+            const form = document.getElementById('checkout-form');
+            const summaryDiv = document.querySelector('.cart-summary');
+
+            // Message Container
+            const msgBox = document.createElement('div');
+            msgBox.id = 'form-message';
+            msgBox.style.marginTop = '15px';
+            msgBox.style.fontWeight = 'bold';
+            msgBox.style.textAlign = 'center';
+            summaryDiv.appendChild(msgBox);
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                // Clear previous messages
+                msgBox.textContent = '';
+                msgBox.className = '';
+
+                const formData = new FormData(form);
+                const orderData = {
+                    customerName: formData.get('name'),
+                    phone: formData.get('phone'),
+                    area: formData.get('area'), // Added area
+                    address: formData.get('address'),
+                    notes: formData.get('notes'),
+                    items: cart,
+                    totalPrice: total
+                };
+
+                const submitBtn = document.querySelector('.checkout-btn');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Placing Order...';
+                submitBtn.disabled = true;
+
+                try {
+                    const response = await fetch('/api/orders', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(orderData)
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        msgBox.textContent = 'Order Placed Successfully! Redirecting...';
+                        msgBox.style.color = 'green';
+
+                        // Save Order ID for tracking (Current)
+                        localStorage.setItem('current_order_id', data.orderId);
+
+                        // Add to Order History
+                        const myOrders = JSON.parse(localStorage.getItem('my_orders') || '[]');
+                        if (!myOrders.includes(data.orderId)) {
+                            myOrders.push(data.orderId);
+                            localStorage.setItem('my_orders', JSON.stringify(myOrders));
+                        }
+
+                        // Clear Cart
+                        localStorage.removeItem('bull_n_buns_cart');
+
+                        // Small delay to let user see success
+                        setTimeout(() => {
+                            window.location.href = 'status.html';
+                        }, 1500);
+                    } else {
+                        msgBox.textContent = 'Failed: ' + data.message;
+                        msgBox.style.color = 'red';
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    msgBox.textContent = 'Network or Server Error. Please try again.';
+                    msgBox.style.color = 'red';
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

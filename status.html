@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Status | Bull N Buns</title>
+    <meta name="description" content="Check your order status.">
+    <link rel="icon" href="./assets/logo/name.png" type="image/png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;700;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="./assets/logo/name.png" alt="Bull N Buns Logo">
+                </a>
+            </div>
+
+            <div class="header-nav">
+                <a href="index.html#home" class="header-btn">Home</a>
+                <a href="index.html#menu" class="header-btn">Menu</a>
+                <a href="ongoing_orders.html" class="header-btn">Orders</a>
+                <a href="index.html#contact" class="header-btn">Contact</a>
+            </div>
+
+            <div class="nav-right">
+                <div class="nav-icons">
+                    <!-- Reset cart icon or hide badge since order placed -->
+                    <a href="cart.html" class="icon-btn">
+                        <img src="./assets/cart.png" alt="Cart" style="width: 30px; height: auto;">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Status Section -->
+    <section class="status-section">
+        <div class="status-card">
+            <div id="status-icon-container">
+                <img src="./assets/characters/bull.png" alt="Bull Status" class="status-img" id="status-icon"
+                    style="width: 150px; height: auto;">
+            </div>
+
+            <h1 class="status-title" id="status-title">Pending</h1>
+            <p class="status-text" id="status-desc">Your order has been placed and is waiting for restaurant
+                confirmation.</p>
+
+            <div class="status-steps">
+                <span class="step active" id="step-pending">Pending</span>
+                <span class="step" id="step-accepted">Accepted</span>
+                <span class="step" id="step-delivered">Delivered</span>
+            </div>
+
+            <br><br>
+            <a href="index.html" class="btn header-btn"
+                style="background:var(--primary); color:#fff; display:inline-block;">Back to Home</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>Bull N Buns</h2>
+                    <p>Feeding the wild side of you since 2024.</p>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Bull N Buns. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Real-time Status Script
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartCount(); // Ensure cart count is updated (likely 0)
+
+            const orderId = localStorage.getItem('current_order_id');
+            if (!orderId) {
+                // No order tracking?
+                document.querySelector('.status-card').innerHTML = `
+                    <h1>No Active Order</h1>
+                    <p>It seems you haven't placed an order yet.</p>
+                    <br>
+                    <a href="index.html#menu" class="btn header-btn" style="background:var(--primary); color:#fff; display:inline-block;">Go to Menu</a>
+                `;
+                return;
+            }
+
+            const statusTitle = document.getElementById('status-title');
+            const statusDesc = document.getElementById('status-desc');
+
+            const steps = {
+                pending: document.getElementById('step-pending'),
+                accepted: document.getElementById('step-accepted'),
+                delivered: document.getElementById('step-delivered')
+            };
+
+            // Initial Check
+            checkStatus();
+
+            // Poll every 5 seconds
+            const pollInterval = setInterval(checkStatus, 5000);
+
+            async function checkStatus() {
+                try {
+                    const response = await fetch(`/api/orders/${orderId}`);
+                    const data = await response.json();
+
+                    if (data.success) {
+                        setStatus(data.status);
+
+                        // Stop polling if final state
+                        if (data.status === 'delivered' || data.status === 'rejected') {
+                            clearInterval(pollInterval);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error fetching status:', error);
+                }
+            }
+
+            function setStatus(status) {
+                // Reset steps
+                Object.values(steps).forEach(s => s?.classList.remove('active'));
+
+                status = status.toLowerCase();
+
+                if (status === 'pending') {
+                    statusTitle.textContent = 'Pending';
+                    statusDesc.textContent = 'Your order is being reviewed.';
+                    statusTitle.style.color = '#FF9F1C'; // Primary Orange
+                    steps.pending.classList.add('active');
+                }
+                else if (status === 'accepted') {
+                    statusTitle.textContent = 'Accepted';
+                    statusDesc.textContent = 'The kitchen is preparing your meal!';
+                    statusTitle.style.color = '#2EC4B6'; // Teal
+                    steps.accepted.classList.add('active');
+                }
+                else if (status === 'rejected') {
+                    statusTitle.textContent = 'Rejected';
+                    statusDesc.textContent = 'Sorry, we cannot fulfill this order right now.';
+                    statusTitle.style.color = '#EF476F'; // Red
+                }
+                else if (status === 'delivered') {
+                    statusTitle.textContent = 'Delivered';
+                    statusDesc.textContent = 'Enjoy your meal!';
+                    statusTitle.style.color = '#06D6A0'; // Green
+                    steps.delivered.classList.add('active');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
