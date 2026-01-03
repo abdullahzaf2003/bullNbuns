@@ -619,11 +619,13 @@ window.alert = function (message) {
 function checkStoreStatus() {
     const hour = new Date().getHours();
 
-    // Config: Closed between 3 (3 AM) and 12 (12 PM)
-    const CLOSED_START_HOUR = 3;
+    // Config: Closed from 11 PM (23) to 12 PM (12)
+    const CLOSED_START_HOUR = 23;
     const CLOSED_END_HOUR = 12;
 
-    if (hour >= CLOSED_START_HOUR && hour < CLOSED_END_HOUR) {
+    const isClosed = (hour >= CLOSED_START_HOUR) || (hour < CLOSED_END_HOUR);
+
+    if (isClosed) {
         // 1. Show Banner
         const closedBanner = document.createElement('div');
         closedBanner.className = 'store-status-banner';
