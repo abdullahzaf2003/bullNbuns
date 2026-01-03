@@ -211,7 +211,11 @@
 
     <div class="admin-header">
         <h1>Admin Dashboard | 2117513*Aa</h1>
-        <button class="refresh-btn" onclick="fetchOrders()">Refresh Orders</button>
+        <div style="display:flex; gap:10px;">
+            <button id="enable-sound-btn" class="refresh-btn" style="background-color: #EF476F;"
+                onclick="enableSound()">🔇 Enable Sound</button>
+            <button class="refresh-btn" onclick="fetchOrders()">Refresh Orders</button>
+        </div>
     </div>
 
     <!-- 3-Column Layout -->
@@ -402,6 +406,23 @@
 
         // Initial load
         fetchOrders();
+
+        function enableSound() {
+            const alertSound = document.getElementById('order-alert');
+            const btn = document.getElementById('enable-sound-btn');
+
+            // Play and pause immediately to unlock audio context
+            alertSound.play().then(() => {
+                alertSound.pause();
+                alertSound.currentTime = 0;
+                btn.innerText = "🔊 Sound Enabled";
+                btn.style.backgroundColor = "#06D6A0";
+                btn.disabled = true;
+            }).catch(e => {
+                console.error("Could not enable sound", e);
+                alert("Could not enable sound. Please change your browser settings.");
+            });
+        }
     </script>
 </body>
 
