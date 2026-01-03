@@ -230,17 +230,24 @@
         </div>
     </div>
 
+    <!-- Audio Alert (Short Ding) -->
+    <audio id="order-alert" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"
+        preload="auto"></audio>
+
     <script>
         const API_URL = '/api/orders';
+        let lastOrderCount = 0; // Track order count to trigger sound
+        let lastOrdersHash = ''; // Track order data to prevent unnecessary re-renders
 
         async function fetchOrders() {
             const pendingList = document.getElementById('pending-list');
             const ongoingList = document.getElementById('ongoing-list');
             const deliveredList = document.getElementById('delivered-list');
+            const alertSound = document.getElementById('order-alert');
 
-            pendingList.innerHTML = '<p>Loading...</p>';
-            ongoingList.innerHTML = '<p>Loading...</p>';
-            deliveredList.innerHTML = '<p>Loading...</p>';
+            // Retain old content temporarily or show loading only on first load?
+            // To prevent flickering, maybe clear only before appending new?
+            // For now, let's keep it simple.
 
             try {
                 const response = await fetch(API_URL);
@@ -250,41 +257,65 @@
                     throw new Error('Failed to fetch orders');
                 }
 
+                const orders = data.orders;
+
+                // Simple "Hash" check to prevent flickering (compare stringified data)
+                // We map to a simplified structure to ignore non-visual changes if needed, 
+                // but direct stringify is usually fine for this size.
+                const currentHash = JSON.stringify(orders);
+                if (currentHash === lastOrdersHash) {
+                    // No changes, skip re-render
+                    return;
+                }
+                lastOrdersHash = currentHash;
+
                 // Clear lists
                 pendingList.innerHTML = '';
                 ongoingList.innerHTML = '';
                 deliveredList.innerHTML = '';
-
-                const orders = data.orders;
 
                 if (orders.length === 0) {
                     pendingList.innerHTML = '<p>No orders found.</p>';
                     return;
                 }
 
+                let pendingCount = 0;
+
                 orders.forEach(order => {
                     const card = createOrderCard(order);
 
                     if (order.status === 'pending') {
                         pendingList.appendChild(card);
+                        pendingCount++;
                     } else if (order.status === 'accepted') {
                         ongoingList.appendChild(card);
                     } else if (order.status === 'delivered') {
                         deliveredList.appendChild(card);
                     } else if (order.status === 'rejected') {
-                        // Optional: Separate list for rejected or append to delivered/history
-                        // For now, let's put them in delivered column but visually distinct or separate?
-                        // User asked for 3 columns. Let's put rejected at bottom of delivered or ignore? 
-                        // Let's add them to "Delivered" column for history sake but maybe bottom.
                         deliveredList.appendChild(card);
                     }
                 });
 
+                // Check for new pending orders
+                if (pendingCount > lastOrderCount) {
+                    // Try to play sound
+                    alertSound.play().catch(e => console.log('Audio autoplay blocked', e));
+                }
+                lastOrderCount = pendingCount;
+
             } catch (error) {
                 console.error(error);
-                // Show error in all columns
-                [pendingList, ongoingList, deliveredList].forEach(el => el.innerHTML = '<p style="color:red">Error.</p>');
+                // Don't wipe the screen on transient network errors, just log it
             }
+        }
+
+
+
+            } catch (error) {
+            console.error(error);
+            // Show error in all columns
+            [pendingList, ongoingList, deliveredList].forEach(el => el.innerHTML = '<p style="color:red">Error.</p>');
+        }
         }
 
         function createOrderCard(order) {
@@ -372,8 +403,8 @@
             }
         }
 
-        // Auto Refresh every 10 seconds
-        setInterval(fetchOrders, 10000);
+        // Auto Refresh every 15 seconds
+        setInterval(fetchOrders, 15000);
 
         // Initial load
         fetchOrders();

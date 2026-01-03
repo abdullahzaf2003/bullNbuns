@@ -567,3 +567,79 @@ if (hamburger && headerNav) {
         });
     });
 }
+
+/* =========================================
+   1. Toast Notifications
+   ========================================= */
+function showToast(message, type = 'info') {
+    let container = document.querySelector('.notification-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'notification-container';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+
+    // Icons based on type
+    let icon = 'ℹ️';
+    if (type === 'success') icon = '✅';
+    if (type === 'error') icon = '❌';
+
+    toast.innerHTML = `<span class="toast-icon">${icon}</span> ${message}`;
+    container.appendChild(toast);
+
+    // Trigger animation
+    requestAnimationFrame(() => {
+        toast.classList.add('show');
+    });
+
+    // Remove after 3s
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Overwrite default alert with Toast
+window.alert = function (message) {
+    // Determine type based on keywords (simple heuristic)
+    let type = 'info';
+    const msgLower = message.toLowerCase();
+    if (msgLower.includes('success') || msgLower.includes('added')) type = 'success';
+    else if (msgLower.includes('error') || msgLower.includes('failed') || msgLower.includes('close')) type = 'error';
+
+    showToast(message, type);
+};
+
+/* =========================================
+   2. Store Status Logic (Closed 3 AM - 12 PM)
+   ========================================= */
+function checkStoreStatus() {
+    const hour = new Date().getHours();
+
+    // Config: Closed between 3 (3 AM) and 12 (12 PM)
+    const CLOSED_START_HOUR = 3;
+    const CLOSED_END_HOUR = 12;
+
+    if (hour >= CLOSED_START_HOUR && hour < CLOSED_END_HOUR) {
+        // 1. Show Banner
+        const closedBanner = document.createElement('div');
+        closedBanner.className = 'store-status-banner';
+        closedBanner.innerText = '🔴 We are currently closed. Orders will be processed when we open!';
+        closedBanner.style.display = 'block';
+        document.body.prepend(closedBanner);
+
+        // 2. Disable Checkout / Add to Cart
+        const checkoutBtns = document.querySelectorAll('.checkout-btn, .add-to-cart-btn');
+        checkoutBtns.forEach(btn => {
+            btn.style.opacity = '0.5';
+            btn.style.pointerEvents = 'none';
+            btn.innerText = 'Store Closed';
+        });
+    }
+}
+
+// Run status check on load
+document.addEventListener('DOMContentLoaded', checkStoreStatus);

@@ -1,0 +1,65 @@
+/* Notification Container */
+.notification-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 9999;
+}
+
+/* Individual Toast */
+.toast {
+    background: rgba(30, 30, 30, 0.95);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-left: 4px solid var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 280px;
+    transform: translateX(120%);
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+}
+
+.toast.show {
+    transform: translateX(0);
+}
+
+.toast-success {
+    border-left-color: var(--status-delivered, #06D6A0);
+}
+
+.toast-error {
+    border-left-color: var(--status-rejected, #EF476F);
+}
+
+.toast-info {
+    border-left-color: var(--status-pending, #FF9F1C);
+}
+
+/* Icon */
+.toast-icon {
+    font-size: 1.2rem;
+}
+
+/* Store Status Banner */
+.store-status-banner {
+    background-color: #EF476F;
+    color: white;
+    text-align: center;
+    padding: 8px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 2000;
+    display: none;
+    /* Hidden by default */
+}
