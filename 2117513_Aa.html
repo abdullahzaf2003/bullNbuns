@@ -44,10 +44,32 @@
             font-weight: bold;
         }
 
-        .orders-container {
+        .dashboard-columns {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
+            align-items: start;
+        }
+
+        .column {
+            background-color: #252525;
+            padding: 15px;
+            border-radius: 10px;
+            min-height: 200px;
+        }
+
+        .col-title {
+            text-align: center;
+            border-bottom: 3px solid #555;
+            padding-bottom: 10px;
+            margin-top: 0;
+            color: #ddd;
+        }
+
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .order-card {
@@ -192,16 +214,34 @@
         <button class="refresh-btn" onclick="fetchOrders()">Refresh Orders</button>
     </div>
 
-    <div id="orders-list" class="orders-container">
-        <!-- Cards injected here -->
-        <p>Loading...</p>
+    <!-- 3-Column Layout -->
+    <div class="dashboard-columns">
+        <div class="column col-pending">
+            <h2 class="col-title" style="border-bottom-color: var(--status-pending)">Pending</h2>
+            <div id="pending-list" class="orders-list"></div>
+        </div>
+        <div class="column col-ongoing">
+            <h2 class="col-title" style="border-bottom-color: var(--status-accepted)">Ongoing</h2>
+            <div id="ongoing-list" class="orders-list"></div>
+        </div>
+        <div class="column col-delivered">
+            <h2 class="col-title" style="border-bottom-color: var(--status-delivered)">Delivered</h2>
+            <div id="delivered-list" class="orders-list"></div>
+        </div>
     </div>
 
     <script>
         const API_URL = '/api/orders';
 
         async function fetchOrders() {
-            const container = document.getElementById('orders-list');
+            const pendingList = document.getElementById('pending-list');
+            const ongoingList = document.getElementById('ongoing-list');
+            const deliveredList = document.getElementById('delivered-list');
+
+            pendingList.innerHTML = '<p>Loading...</p>';
+            ongoingList.innerHTML = '<p>Loading...</p>';
+            deliveredList.innerHTML = '<p>Loading...</p>';
+
             try {
                 const response = await fetch(API_URL);
                 const data = await response.json();
@@ -210,22 +250,40 @@
                     throw new Error('Failed to fetch orders');
                 }
 
+                // Clear lists
+                pendingList.innerHTML = '';
+                ongoingList.innerHTML = '';
+                deliveredList.innerHTML = '';
+
                 const orders = data.orders;
-                container.innerHTML = '';
 
                 if (orders.length === 0) {
-                    container.innerHTML = '<p>No orders found.</p>';
+                    pendingList.innerHTML = '<p>No orders found.</p>';
                     return;
                 }
 
                 orders.forEach(order => {
                     const card = createOrderCard(order);
-                    container.appendChild(card);
+
+                    if (order.status === 'pending') {
+                        pendingList.appendChild(card);
+                    } else if (order.status === 'accepted') {
+                        ongoingList.appendChild(card);
+                    } else if (order.status === 'delivered') {
+                        deliveredList.appendChild(card);
+                    } else if (order.status === 'rejected') {
+                        // Optional: Separate list for rejected or append to delivered/history
+                        // For now, let's put them in delivered column but visually distinct or separate?
+                        // User asked for 3 columns. Let's put rejected at bottom of delivered or ignore? 
+                        // Let's add them to "Delivered" column for history sake but maybe bottom.
+                        deliveredList.appendChild(card);
+                    }
                 });
 
             } catch (error) {
                 console.error(error);
-                container.innerHTML = '<p style="color:red">Error loading orders. Is the server running?</p>';
+                // Show error in all columns
+                [pendingList, ongoingList, deliveredList].forEach(el => el.innerHTML = '<p style="color:red">Error.</p>');
             }
         }
 

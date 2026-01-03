@@ -808,6 +808,13 @@
         padding-right: 1rem;
     }
 
+    .tab-btn {
+        padding: 0.5rem 1rem;
+        /* Smaller padding */
+        font-size: 0.9rem;
+        /* Smaller text */
+    }
+
     .menu-tabs::-webkit-scrollbar {
         display: none;
         /* Chrome/Safari */
