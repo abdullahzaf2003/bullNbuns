@@ -128,6 +128,23 @@
     .mobile-live-btn {
         display: inline-block;
     }
+
+    .logo img {
+        height: 60px;
+        /* Smaller logo on mobile */
+    }
+
+    .nav-container {
+        padding: 0 1rem;
+    }
+
+    .nav-right {
+        gap: 0.5rem;
+    }
+
+    .nav-icons {
+        gap: 0.5rem;
+    }
 }
 
 .nav-right {
