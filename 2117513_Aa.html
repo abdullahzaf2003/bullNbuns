@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Bull N Buns</title>
+    <link rel="icon" href="./assets/logo/name.png" type="image/png">
+    <link rel="stylesheet" href="styles.css"> <!-- Reusing existing vars for consistency -->
+    <style>
+        :root {
+            --status-pending: #FF9F1C;
+            --status-accepted: #2EC4B6;
+            --status-rejected: #EF476F;
+            --status-delivered: #06D6A0;
+            --dark-card: #1e1e1e;
+            --text-light: #f5f5f5;
+        }
+
+        body {
+            background-color: #121212;
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .refresh-btn {
+            background-color: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .orders-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .order-card {
+            background-color: var(--dark-card);
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            color: #aaa;
+        }
+
+        .order-id {
+            font-family: monospace;
+            background: #333;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .order-status {
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            color: #fff;
+        }
+
+        .status-pending {
+            background-color: var(--status-pending);
+        }
+
+        .status-accepted {
+            background-color: var(--status-accepted);
+        }
+
+        .status-rejected {
+            background-color: var(--status-rejected);
+        }
+
+        .status-delivered {
+            background-color: var(--status-delivered);
+        }
+
+        .customer-info h3 {
+            margin: 0 0 5px 0;
+            color: var(--primary);
+        }
+
+        .customer-info p {
+            margin: 2px 0;
+            font-size: 0.9em;
+            color: #ddd;
+        }
+
+        .order-items {
+            margin: 15px 0;
+            background: #252525;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .order-items ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        .order-items li {
+            margin-bottom: 4px;
+        }
+
+        .addon-text {
+            font-size: 0.8em;
+            color: #aaa;
+            display: block;
+        }
+
+        .order-notes {
+            background: #3a3a3a;
+            padding: 8px;
+            border-radius: 4px;
+            font-style: italic;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            color: #ffcccb;
+        }
+
+        .order-total {
+            font-size: 1.1em;
+            font-weight: bold;
+            text-align: right;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-action {
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            transition: opacity 0.2s;
+        }
+
+        .btn-action:hover {
+            opacity: 0.9;
+        }
+
+        .btn-accept {
+            background-color: var(--status-accepted);
+        }
+
+        .btn-reject {
+            background-color: var(--status-rejected);
+        }
+
+        .btn-deliver {
+            background-color: var(--status-delivered);
+            grid-column: span 2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="admin-header">
+        <h1>Admin Dashboard | 2117513*Aa</h1>
+        <button class="refresh-btn" onclick="fetchOrders()">Refresh Orders</button>
+    </div>
+
+    <div id="orders-list" class="orders-container">
+        <!-- Cards injected here -->
+        <p>Loading...</p>
+    </div>
+
+    <script>
+        const API_URL = '/api/orders';
+
+        async function fetchOrders() {
+            const container = document.getElementById('orders-list');
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error('Failed to fetch orders');
+                }
+
+                const orders = data.orders;
+                container.innerHTML = '';
+
+                if (orders.length === 0) {
+                    container.innerHTML = '<p>No orders found.</p>';
+                    return;
+                }
+
+                orders.forEach(order => {
+                    const card = createOrderCard(order);
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = '<p style="color:red">Error loading orders. Is the server running?</p>';
+            }
+        }
+
+        function createOrderCard(order) {
+            const card = document.createElement('div');
+            card.className = 'order-card';
+
+            const date = new Date(order.createdAt).toLocaleString();
+
+            // Items HTML
+            const itemsHtml = order.items.map(item => {
+                let addons = '';
+                if (item.addons && item.addons.length > 0) {
+                    addons = `<span class="addon-text">+ ${item.addons.map(a => a.name).join(', ')}</span>`;
+                }
+                return `<li>${item.name} (x1) - Rs. ${item.totalPrice} ${addons}</li>`;
+            }).join('');
+
+            // Status Badge
+            const statusClass = `status-${order.status.toLowerCase()}`;
+
+            // Buttons logic
+            let buttonsHtml = '';
+            if (order.status === 'pending') {
+                buttonsHtml = `
+                    <button class="btn-action btn-accept" onclick="updateStatus('${order._id}', 'accepted')">Accept</button>
+                    <button class="btn-action btn-reject" onclick="updateStatus('${order._id}', 'rejected')">Reject</button>
+                `;
+            } else if (order.status === 'accepted') {
+                buttonsHtml = `
+                    <button class="btn-action btn-deliver" onclick="updateStatus('${order._id}', 'delivered')">Mark Delivered</button>
+                `;
+            } else {
+                buttonsHtml = `<div style="text-align:center; color:#aaa; font-size:0.9em;">No actions available</div>`;
+            }
+
+            card.innerHTML = `
+                <div class="order-header">
+                    <span class="order-id">#${order._id.slice(-6)}</span>
+                    <span class="order-status ${statusClass}">${order.status}</span>
+                </div>
+                <div class="customer-info">
+                    <h3>${order.customerName}</h3>
+                    <p>📞 ${order.phone}</p>
+                    <p>📍 ${order.address} (${order.area || 'Unknown Area'})</p>
+                    <p style="font-size:0.8em; color:#888;">${date}</p>
+                </div>
+                
+                <div class="order-items">
+                    <ul>${itemsHtml}</ul>
+                </div>
+
+                ${order.notes ? `<div class="order-notes">items note: "${order.notes}"</div>` : ''}
+
+                <div class="order-total">
+                    Total: Rs. ${order.totalPrice}
+                </div>
+
+                <div class="action-buttons">
+                    ${buttonsHtml}
+                </div>
+            `;
+
+            return card;
+        }
+
+        async function updateStatus(id, newStatus) {
+            if (!confirm(`Mark this order as ${newStatus}?`)) return;
+
+            try {
+                const res = await fetch(`${API_URL}/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    fetchOrders(); // Refresh UI
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Failed to update order');
+            }
+        }
+
+        // Auto Refresh every 10 seconds
+        setInterval(fetchOrders, 10000);
+
+        // Initial load
+        fetchOrders();
+    </script>
+</body>
+
+</html>

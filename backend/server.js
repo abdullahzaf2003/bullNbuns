@@ -92,6 +92,25 @@ app.get('/api/orders', async (req, res) => {
     }
 });
 
+// 4. Update Order Status
+app.put('/api/orders/:id', async (req, res) => {
+    try {
+        const { status } = req.body;
+        const order = await Order.findByIdAndUpdate(
+            req.params.id,
+            { status },
+            { new: true }
+        );
+        if (!order) {
+            return res.status(404).json({ success: false, message: 'Order not found' });
+        }
+        res.json({ success: true, order });
+    } catch (error) {
+        console.error('Error updating order:', error);
+        res.status(500).json({ success: false, message: 'Server Error' });
+    }
+});
+
 // Test Route (Commented out to let index.html load)
 // app.get('/', (req, res) => {
 //     res.send('Bull N Buns API is running...');

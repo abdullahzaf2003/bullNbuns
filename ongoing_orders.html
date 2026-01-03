@@ -121,6 +121,22 @@
                 <a href="index.html#menu" class="header-btn">Menu</a>
                 <a href="index.html#contact" class="header-btn">Contact</a>
             </div>
+
+            <div class="nav-right">
+                <div class="nav-icons">
+                    <a href="ongoing_orders.html" class="mobile-live-btn">Live Order</a>
+
+                    <a href="cart.html" class="icon-btn cart-icon-btn">
+                        <img src="./assets/cart.png" alt="Cart" style="width: 30px; height: auto;">
+                        <span id="cart-count" class="cart-badge">0</span>
+                    </a>
+                </div>
+                <div class="hamburger-menu" id="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -133,6 +149,44 @@
             <div id="orders-container" class="orders-grid"></div>
         </div>
     </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>Bull N Buns</h2>
+                    <p>Feeding the wild side of you since 2025.</p>
+                </div>
+                <!-- Social Icons in Footer -->
+                <div class="footer-social" style="display:flex; gap:10px; align-items:center;">
+                    <!-- Instagram Icon -->
+                    <a href="https://instagram.com" target="_blank" class="icon-btn social-icon"
+                        style="width: 35px; height: 35px; color: white; background: rgba(255,255,255,0.1);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003h-.001zm0 1.441c2.148 0 2.404.009 3.25.049.784.037 1.21.17 1.494.281.376.145.644.319.923.599.28.28.454.546.598.922.112.284.244.71.282 1.495.039.846.048 1.102.048 3.251 0 2.148-.009 2.404-.048 3.25-.038.785-.17 1.21-.282 1.495a2.529 2.529 0 0 1-.598.922c-.28.28-.546.454-.923.598-.284.113-.71.245-1.494.282-.846.04-1.103.048-3.25.048-2.148 0-2.404-.009-3.25-.048-.784-.037-1.21-.17-1.494-.282a2.504 2.504 0 0 1-.922-.598 2.478 2.478 0 0 1-.598-.922c-.113-.284-.245-.71-.282-1.495-.04-.846-.048-1.102-.048-3.25 0-2.148.009-2.404.048-3.25.037-.785.17-1.21.282-1.495.111-.285.285-.552.598-.922.28-.279.547-.453.922-.598.285-.111.71-.244 1.495-.282.846-.04 1.102-.049 3.25-.049z" />
+                            <path
+                                d="M8 3.86a4.14 4.14 0 1 0 0 8.28 4.14 4.14 0 0 0 0-8.28zm0 1.441a2.699 2.699 0 1 1 0 5.398 2.699 2.699 0 0 1 0-5.398zm4.195-2.207a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92z" />
+                        </svg>
+                    </a>
+                    <!-- Facebook Icon -->
+                    <a href="https://facebook.com" target="_blank" class="icon-btn social-icon"
+                        style="width: 35px; height: 35px; color: white; background: rgba(255,255,255,0.1);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z" />
+                        </svg>
+                    </a>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 Bull N Buns. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script>
         const container = document.getElementById('orders-container');
@@ -234,6 +288,7 @@
         fetchOrders();
         setInterval(fetchOrders, 15000);
     </script>
+    <script src="script.js"></script>
 </body>
 
 </html>

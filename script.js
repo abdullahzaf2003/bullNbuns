@@ -548,3 +548,22 @@ function removeFromCart(uniqueId) {
 // Make globally available
 window.removeFromCart = removeFromCart;
 window.addToCart = addToCart;
+
+// Mobile Menu Logic
+const hamburger = document.getElementById('hamburger');
+const headerNav = document.querySelector('.header-nav');
+
+if (hamburger && headerNav) {
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        headerNav.classList.toggle('active');
+    });
+
+    // Close menu when a link is clicked
+    document.querySelectorAll('.header-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            headerNav.classList.remove('active');
+        });
+    });
+}
